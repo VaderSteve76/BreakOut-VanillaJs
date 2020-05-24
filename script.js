@@ -48,7 +48,7 @@ for (let i = 0; i < brickRowCount; i++) {
     const y = j * (brickInfo.h + brickInfo.padding) + brickInfo.offsetY;
     bricks[i][j] = { x, y, ...brickInfo };
   }
-}
+};
 
 // Draw ball on canvas
 function drawBall() {
@@ -57,7 +57,7 @@ function drawBall() {
   ctx.fillStyle = '#0095dd';
   ctx.fill();
   ctx.closePath();
-}
+};
 
 // Draw paddle on canvas
 function drawPaddle() {
@@ -66,7 +66,51 @@ function drawPaddle() {
   ctx.fillStyle = '#0095dd';
   ctx.fill();
   ctx.closePath();
-}
+};
+
+// Draw score oon canvas
+function drawScore() {
+  ctx.font = '20px Arial';
+  ctx.fillText(`Score: ${score}`, canvas.width - 100, 30);
+};
+
+// Draw bricks on canvas
+function drawBricks() {
+  bricks.forEach(column => {
+    column.forEach(brick => {
+      ctx.beginPath();
+      ctx.rect(brick.x, brick.y, brick.w, brick.h);
+      ctx.fillStyle = brick.visible ? '#0095dd' : 'transparent';
+      ctx.fill();
+      ctx.closePath();
+    });
+  });
+};
+
+// Move paddle on canvas
+function movePaddle() {
+  paddle.x += paddle.dx;
+
+  // Wall detection
+  if (paddle.x + paddle.w > canvas.width) {
+    paddle.x = canvas.width - paddle.w;
+  }
+
+  if (paddle.x < 0) {
+    paddle.x = 0;
+  }
+};
+
+// Move ball on canvas
+function moveBall() {
+  ball.x += ball.dx;
+  ball.y += ball.dy;
+
+  // Wall collision (right/left)
+  if (ball.x + ball.size > canvas.width || ball.x - ball.size < 0) {
+    ball.dx *= -1; // ball.dx = ball.dx * -1
+  }
+};
 
 // Keydown event
 function keyDown(e) {
@@ -75,7 +119,7 @@ function keyDown(e) {
   } else if (e.key === 'Left' || e.key === 'ArrowLeft') {
     paddle.dx = -paddle.speed;
   }
-}
+};
 
 // Keyup event
 function keyUp(e) {
